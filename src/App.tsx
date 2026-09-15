@@ -3,12 +3,12 @@ import {
   AtSign,
   ArrowRight,
   Camera,
-  Check,
-  ChevronDown,
   MessageCircle,
+  Phone,
   Search,
   ShoppingCart,
   Star,
+  X,
 } from "lucide-react";
 import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
@@ -18,15 +18,6 @@ import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
   PaginationContent,
   PaginationEllipsis,
   PaginationItem,
@@ -34,15 +25,17 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { PRODUCTS, CATEGORY_LABELS, type Product } from "@/data/products";
+import { PRODUCTS, type Product } from "@/data/products";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 const NAV_LINKS = ["Home"];
-
-const CATEGORIES: { label: string; products: Product[] }[] =
-  CATEGORY_LABELS.map((label) => ({
-    label,
-    products: PRODUCTS.filter((product) => product.category === label),
-  }));
 
 const PRODUCTS_PER_PAGE = 8;
 
@@ -249,14 +242,57 @@ function CategoryHeader() {
           })}
         </nav>
 
-        <Button
-          type="button"
-          variant="secondary"
-          size="sm"
-          className="rounded-full font-semibold  text-[13px] px-4 h-8 border-0 transition-all duration-200 hover:brightness-105 hover:-translate-y-px hover:shadow-md active:translate-y-0 active:shadow-sm"
-        >
-          Contact
-        </Button>
+        <Dialog>
+          <DialogTrigger
+            render={
+              <Button
+                type="button"
+                variant="secondary"
+                size="sm"
+                className="rounded-full font-semibold text-[13px] px-4 h-8 border-0 transition-all duration-200 hover:brightness-105 hover:-translate-y-px hover:shadow-md active:translate-y-0 active:shadow-sm"
+              />
+            }
+          >
+            Contact
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-sm p-0 overflow-hidden">
+            <div className="relative flex flex-col items-center text-center">
+              <DialogClose
+                render={
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="absolute top-3 right-3 size-8 rounded-full text-white hover:bg-white hover:text-black"
+                  />
+                }
+              >
+                <X className="size-4" />
+              </DialogClose>
+
+              <div className="flex h-20 w-full items-center justify-center bg-primary">
+                <div className="grid size-14 place-items-center rounded-full bg-white/15">
+                  <Phone className="size-7 text-white" />
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-1.5 px-6 pt-5 pb-6">
+                <DialogTitle className="text-xl">Contact Us</DialogTitle>
+                <DialogDescription>
+                  We're happy to help. Reach us on phone or WhatsApp.
+                </DialogDescription>
+
+                <span
+                  // href="tel:+919763404683"
+                  className="mt-4 inline-flex cursor-text items-center justify-center gap-2 rounded-full border bg-background px-5 py-2.5 text-sm font-semibold shadow-xs select-text transition-colors hover:bg-muted"
+                >
+                  <Phone className="size-4 shrink-0 text-primary" />
+                  <span>+91 97634 04683</span>
+                </span>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       </motion.div>
     </div>
   );
@@ -265,40 +301,19 @@ function CategoryHeader() {
 function FilterBar({
   value,
   onValueChange,
+  count,
 }: {
   value: string;
-  onValueChange: (value: string | null) => void;
+  onValueChange: (value: string) => void;
+  count: number;
 }) {
   return (
-    <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-3 border-b pb-4">
-      <div className="flex items-center gap-1.5">
-        <DropdownMenu>
-          <DropdownMenuTrigger
-            render={<Button type="button" />}
-            className="h-10 gap-2 rounded-full px-4 shadow-xs"
-          >
-            <span>{value}</span>
-            <ChevronDown data-icon="inline-end" />
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="w-64 rounded-xl p-1.5">
-            <DropdownMenuGroup>
-              <DropdownMenuLabel>Shop by category</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              {CATEGORIES.map((category) => (
-                <DropdownMenuItem
-                  key={category.label}
-                  onClick={() => onValueChange(category.label)}
-                  className={`justify-between py-2 ${category.label === value ? "bg-primary/10 font-medium text-primary focus:bg-primary/10 focus:text-primary" : ""}`}
-                >
-                  {category.label}
-                  {category.label === value && (
-                    <Check className="size-4 text-primary" />
-                  )}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuGroup>
-          </DropdownMenuContent>
-        </DropdownMenu>
+    <div className="flex flex-wrap items-center justify-between gap-4 border-b pb-4">
+      <div className="flex items-baseline gap-3">
+        <h1 className="text-4xl font-semibold tracking-tight">All Products</h1>
+        <span className="text-sm text-muted-foreground">
+          {count} {count === 1 ? "product" : "products"}
+        </span>
       </div>
 
       <div className="relative w-full max-w-sm">
@@ -306,6 +321,8 @@ function FilterBar({
         <Input
           placeholder="Search products…"
           aria-label="Search products"
+          value={value}
+          onChange={(e) => onValueChange(e.target.value)}
           className="!h-10 !rounded-full !border-primary/40 !bg-background !pl-11 pr-12 shadow-xs focus-visible:!border-primary focus-visible:!ring-primary/15"
         />
         <Button
@@ -508,24 +525,21 @@ function PageFooter() {
 }
 
 function App() {
-  const [category, setCategory] = useState(CATEGORIES[0].label);
   const [page, setPage] = useState(1);
-  const activeCategory =
-    CATEGORIES.find((c) => c.label === category) ?? CATEGORIES[0];
+  const [search, setSearch] = useState("");
+
+  const filteredProducts = PRODUCTS.filter((p) =>
+    p.name.toLowerCase().includes(search.toLowerCase()),
+  );
+
   const totalPages = Math.max(
     1,
-    Math.ceil(activeCategory.products.length / PRODUCTS_PER_PAGE),
+    Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE),
   );
-  const pageProducts = activeCategory.products.slice(
+  const pageProducts = filteredProducts.slice(
     (page - 1) * PRODUCTS_PER_PAGE,
     page * PRODUCTS_PER_PAGE,
   );
-
-  const handleCategoryChange = (value: string | null) => {
-    if (!value) return;
-    setCategory(value);
-    setPage(1);
-  };
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -533,16 +547,17 @@ function App() {
 
       <main className="mx-auto w-full max-w-6xl">
         <PromoBanner />
-        <div className="mt-12 mb-8 flex items-baseline gap-3">
-          <h1 className="text-4xl font-semibold tracking-tight">
-            {activeCategory.label}
-          </h1>
-          <span className="text-sm text-muted-foreground">
-            {activeCategory.products.length} products
-          </span>
-        </div>
 
-        <FilterBar value={category} onValueChange={handleCategoryChange} />
+        <div className="mt-12 mb-8">
+          <FilterBar
+            value={search}
+            onValueChange={(v) => {
+              setSearch(v);
+              setPage(1);
+            }}
+            count={filteredProducts.length}
+          />
+        </div>
         <ProductGrid products={pageProducts} />
         <PaginationBar
           page={page}
