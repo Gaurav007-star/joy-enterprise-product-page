@@ -1,15 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  AtSign,
-  ArrowRight,
-  Camera,
-  MessageCircle,
-  Phone,
-  Search,
-  ShoppingCart,
-  Star,
-  X,
-} from "lucide-react";
+import { ArrowRight, Phone, Search, ShoppingCart, X } from "lucide-react";
 import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -53,31 +43,6 @@ function getPageItems(current: number, total: number): (number | "ellipsis")[] {
   return items;
 }
 
-const SOCIAL_LINKS = [
-  { label: "Photo feed", icon: Camera },
-  { label: "Messaging", icon: MessageCircle },
-  { label: "Handle", icon: AtSign },
-];
-
-function StarRating({ rating }: { rating: number }) {
-  return (
-    <div className="flex items-center gap-0.5">
-      {Array.from({ length: 5 }, (_, i) => (
-        <Star
-          key={i}
-          aria-hidden
-          className={cn(
-            "size-3.5",
-            i < Math.round(rating)
-              ? "fill-foreground text-foreground"
-              : "text-muted-foreground/50",
-          )}
-        />
-      ))}
-    </div>
-  );
-}
-
 function ProductCard({ product }: { product: Product }) {
   return (
     <Card className="h-full !gap-0 !p-0">
@@ -89,49 +54,66 @@ function ProductCard({ product }: { product: Product }) {
           className="aspect-square w-full object-cover"
         />
         <div className="absolute inset-0 bg-black/30" />
-        <div className="absolute top-3 left-3 z-10 flex flex-col items-start gap-1.5">
-          {product.isSale && (
-            <Badge className="!h-auto rounded-full px-2.5 py-1 text-[11px]">
-              Sale
-            </Badge>
-          )}
-          {product.isNew && (
-            <Badge
-              variant="secondary"
-              className="!h-auto rounded-full px-2.5 py-1 text-[11px]"
-            >
-              New Arrival
-            </Badge>
-          )}
-        </div>
       </div>
 
       <div className="flex flex-1 flex-col gap-2 p-4">
-        <h3 className="line-clamp-2 text-sm leading-snug font-medium">
+        <h3 className="line-clamp-2 text-lg leading-snug font-bold tracking-wider text-foreground">
           {product.name}
         </h3>
-        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-          <StarRating rating={product.rating} />
-          <span>{product.rating}</span>
-          <span className="text-muted-foreground/70">
-            ({product.reviews.toLocaleString()})
-          </span>
-        </div>
-        <div className="mt-auto flex flex-wrap items-baseline gap-x-2 gap-y-1 pt-1">
-          <span className="text-sm font-semibold">₹{product.price}</span>
-          {product.isSale && product.compare ? (
-            <span className="text-xs font-normal text-muted-foreground line-through">
-              ₹{product.compare}
-            </span>
-          ) : null}
-        </div>
       </div>
 
-      <div className="border-t p-4 pt-3">
-        <Button type="button" className="w-full rounded-full" size="lg">
-          <ShoppingCart data-icon="inline-start" className="size-4" />
-          Add to Cart
-        </Button>
+      <div className="border-t p-4 pt-1">
+        <Dialog>
+          <DialogTrigger
+            render={
+              <Button type="button" className="w-full rounded-full" size="lg" />
+            }
+          >
+            <ShoppingCart data-icon="inline-start" className="size-4" />
+            Buy
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-sm overflow-hidden p-0">
+            <div className="relative flex flex-col items-center text-center">
+              <DialogClose
+                render={
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="absolute top-3 right-3 size-8 rounded-full text-white hover:bg-white hover:text-black"
+                  />
+                }
+              >
+                <X className="size-4" />
+              </DialogClose>
+
+              <div className="flex h-20 w-full items-center justify-center bg-primary">
+                <div className="grid size-14 place-items-center rounded-full bg-white/15">
+                  <ShoppingCart className="size-7 text-white" />
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-1.5 px-6 pt-5 pb-6">
+                <DialogTitle className="text-xl">Order this</DialogTitle>
+                <DialogDescription>
+                  Call or WhatsApp us to place your order for{" "}
+                  <span className="font-medium text-foreground">
+                    {product.name}
+                  </span>
+                  .
+                </DialogDescription>
+
+                <span
+                  // href="tel:+919763404683"
+                  className="mt-4 inline-flex cursor-text items-center justify-center gap-2 rounded-full border bg-background px-5 py-2.5 text-sm font-semibold shadow-xs select-text transition-colors hover:bg-muted"
+                >
+                  <Phone className="size-4 shrink-0 text-primary" />
+                  <span>+91 97634 04683</span>
+                </span>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </Card>
   );
@@ -153,7 +135,7 @@ function CategoryHeader() {
         className={cn(
           "relative flex items-center justify-between pointer-events-auto",
           scrolled
-            ? "rounded-lg! bg-white/80 dark:bg-[#1e2429]/80 backdrop-blur-xl shadow-[0_4px_24px_rgba(0,0,0,0.08),0_1px_2px_rgba(0,0,0,0.04)] border border-black/[0.06] dark:border-white/[0.08]"
+            ? "rounded-lg! bg-primary/80 dark:bg-[#1e2429]/80 backdrop-blur-xl shadow-[0_4px_24px_rgba(0,0,0,0.08),0_1px_2px_rgba(0,0,0,0.04)] border border-black/[0.06] dark:border-white/[0.08]"
             : "bg-primary dark:bg-[#1e2429] rounded-lg! mt-2!",
         )}
         initial={false}
@@ -184,12 +166,12 @@ function CategoryHeader() {
       >
         {/* Logo */}
         <a
-          href="#"
+          href="/"
           aria-label="Joy Enterprise brand home"
           className="flex select-none items-center gap-2.5"
         >
-          <motion.span
-            className="grid place-items-center text-[10px] font-black text-red-500 bg-secondary shrink-0 tracking-wide"
+          {/* <motion.span
+            className="grid place-items-center text-[10px] font-black text-white bg-secondary shrink-0 tracking-wide"
             style={{
               boxShadow:
                 "0 2px 8px rgba(4,123,213,0.3), inset 0 1px 0 rgba(255,255,255,0.15)",
@@ -202,9 +184,9 @@ function CategoryHeader() {
             transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
           >
             JE
-          </motion.span>
+          </motion.span> */}
           <motion.span
-            className="font-semibold tracking-tight text-red-500"
+            className="font-semibold tracking-wider text-white"
             animate={{ fontSize: scrolled ? "14px" : "16px" }}
             transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
           >
@@ -227,12 +209,8 @@ function CategoryHeader() {
                 className={cn(
                   "h-8 rounded-full px-3.5 text-[13px] font-medium transition-all duration-200",
                   isActive
-                    ? scrolled
-                      ? "bg-primary/10 text-primary dark:bg-primary/15 dark:text-primary"
-                      : "bg-white/15 text-white dark:text-white"
-                    : scrolled
-                      ? "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-                      : "text-white/80 hover:text-white hover:bg-white/10",
+                    ? "bg-white/15 text-white dark:text-white"
+                    : "text-white/80 hover:text-white hover:bg-white/10",
                 )}
                 aria-current={isActive ? "page" : undefined}
               >
@@ -309,11 +287,11 @@ function FilterBar({
 }) {
   return (
     <div className="flex flex-wrap items-center justify-between gap-4 border-b pb-4">
-      <div className="flex items-baseline gap-3">
-        <h1 className="text-4xl font-semibold tracking-tight">All Products</h1>
-        <span className="text-sm text-muted-foreground">
+      <div className="flex items-center gap-3">
+        <h1 className="text-4xl font-semibold tracking-wider">All Products</h1>
+        <Badge className="!mt-1 !h-auto rounded-full px-2.5 py-1 text-xs">
           {count} {count === 1 ? "product" : "products"}
-        </span>
+        </Badge>
       </div>
 
       <div className="relative w-full max-w-sm">
@@ -355,14 +333,15 @@ function PromoBanner() {
         <span className="text-xs font-semibold tracking-[0.2em] text-white/60 uppercase">
           Limited time offer
         </span>
-        <h2 className="text-2xl leading-tight font-semibold tracking-tight text-white sm:text-3xl">
+        <h2 className="text-2xl leading-tight font-semibold tracking-wider text-white sm:text-3xl">
           New season edits.
           <br />
           Up to 40% off.
         </h2>
         <p className="max-w-sm text-sm leading-relaxed text-white/70">
-          Supporting paragraph describing the seasonal promotion, with a short
-          line of muted copy as a wireframe placeholder.
+          From crunchy chanachur and nimki to pickle, chire bhaja, and
+          freshly-ground garam masala — your daily essentials, in stock and
+          ready to go.
         </p>
       </div>
     </section>
@@ -458,7 +437,7 @@ function PageFooter() {
         <div className="flex flex-col justify-between gap-10 md:flex-row">
           <div className="space-y-4">
             <div className="flex items-center gap-2.5">
-              <div
+              {/* <div
                 className="grid size-7 shrink-0 place-items-center rounded-lg bg-secondary text-[10px] font-black tracking-wide text-red-500"
                 style={{
                   boxShadow:
@@ -466,14 +445,15 @@ function PageFooter() {
                 }}
               >
                 JE
-              </div>
-              <span className="text-base font-semibold tracking-tight text-background">
+              </div> */}
+              <span className="text-lg font-semibold tracking-wider text-background">
                 Joy Enterprise
               </span>
             </div>
             <p className="max-w-xs text-sm leading-relaxed text-background/55">
-              Short brand and about placeholder line describing the store, its
-              values, and its audience in plain wireframe text.
+              Your trusted local grocery store — stocking fresh daily essentials
+              like chanachur, chire bhaja, bori, nimki, pickles, and spices for
+              every home.
             </p>
             {/* <div className="space-y-1.5" aria-hidden>
               <div className="h-1.5 w-4/5 rounded-sm bg-background/25" />
@@ -482,21 +462,13 @@ function PageFooter() {
           </div>
 
           <div>
-            <h3 className="text-sm font-semibold">Social Media</h3>
-            <div className="mt-3 flex items-center gap-1.5">
-              {SOCIAL_LINKS.map(({ label, icon: Icon }) => (
-                <Button
-                  key={label}
-                  type="button"
-                  variant="ghost"
-                  size="icon-sm"
-                  aria-label={label}
-                  className="rounded-full hover:bg-background/10 hover:text-background"
-                >
-                  <Icon className="size-4" />
-                </Button>
-              ))}
-            </div>
+            <h3 className="text-sm font-semibold">Contact</h3>
+            <a
+              href="tel:+919763404683"
+              className="mt-3 flex items-center gap-2 text-sm text-background/70 transition-colors hover:text-background"
+            >
+              +91 97634 04683
+            </a>
           </div>
         </div>
 

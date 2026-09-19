@@ -35,7 +35,7 @@
   --sidebar-accent-foreground: #0a0a0a;
   --sidebar-border: #f2f8ff;
   --sidebar-ring: #047bd5;
-  --font-sans: Inter, ui-sans-serif, sans-serif, system-ui;
+  --font-sans: Inter Tight, ui-sans-serif, sans-serif, system-ui;
   --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   --radius: 1.205rem;
@@ -90,7 +90,7 @@
   --sidebar-accent-foreground: #ffffff;
   --sidebar-border: #1b2024;
   --sidebar-ring: #047bd5;
-  --font-sans: Inter, ui-sans-serif, sans-serif, system-ui;
+  --font-sans: Inter Tight, ui-sans-serif, sans-serif, system-ui;
   --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   --radius: 1.205rem;

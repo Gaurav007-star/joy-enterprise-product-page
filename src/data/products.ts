@@ -32,7 +32,7 @@ const RAW: { name: string; image: string }[] = [
   { name: "Achar (Pickle)", image: achar },
   { name: "Alta (Red Alta)", image: alta },
   { name: "Bisut (Spice Mix)", image: bisut },
-  { name: "Bori (Sundried Lentil Dumplings)", image: bori },
+  { name: "Bori (Dumplings)", image: bori },
   { name: "Bori Red (Red Lentil Dumplings)", image: boriRed },
   { name: "Chanachur Mouchak", image: chanachurMouchak },
   { name: "Chanachur Tikaram", image: chanachurTikaram },
